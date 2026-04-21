@@ -32,32 +32,10 @@
     color: var(--white);
     font-family: var(--font-body);
     overflow-x: hidden;
-    cursor: none;
+    
   }
 
-  /* ── Custom Cursor ── */
-  .cursor {
-    position: fixed; top: 0; left: 0;
-    width: 12px; height: 12px;
-    background: var(--purple-glow);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.08s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
-    mix-blend-mode: screen;
-  }
-  .cursor-ring {
-    position: fixed; top: 0; left: 0;
-    width: 36px; height: 36px;
-    border: 1px solid rgba(168,85,247,0.5);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: transform 0.18s ease, width 0.25s ease, height 0.25s ease;
-  }
-  body:hover .cursor { opacity: 1; }
+
 
   /* ── NAV ── */
   nav {
@@ -80,7 +58,7 @@
     letter-spacing: -0.5px;
     color: var(--white);
     text-decoration: none;
-    cursor: none;
+    
   }
   .logo span { color: var(--purple-glow); }
 
@@ -97,7 +75,7 @@
     text-decoration: none;
     text-transform: uppercase;
     transition: color 0.2s;
-    cursor: none;
+    
   }
   .nav-links a:hover { color: var(--white); }
 
@@ -113,7 +91,7 @@
     padding: 10px 22px;
     border-radius: 4px;
     transition: background 0.25s, border-color 0.25s, box-shadow 0.25s;
-    cursor: none;
+    
     white-space: nowrap;
   }
   .nav-cta:hover {
@@ -216,7 +194,6 @@
     border-radius: 4px;
     text-decoration: none;
     transition: transform 0.2s, box-shadow 0.2s;
-    cursor: none;
     border: none;
   }
   .btn-primary:hover {
@@ -323,7 +300,6 @@
     border: 1px solid var(--white-10);
     overflow: hidden;
     transition: background 0.35s, border-color 0.35s;
-    cursor: none;
   }
   .service-card::before {
     content: '';
@@ -405,7 +381,6 @@
     gap: 28px;
     padding: 32px 0;
     border-top: 1px solid var(--white-10);
-    cursor: none;
     transition: padding-left 0.3s;
   }
   .step-item:hover { padding-left: 12px; }
@@ -487,7 +462,6 @@
   .faq-list { list-style: none; }
   .faq-item {
     border-top: 1px solid var(--white-10);
-    cursor: none;
   }
   .faq-item:last-child { border-bottom: 1px solid var(--white-10); }
 
@@ -569,7 +543,7 @@
     font-size: 16px; font-weight: 800;
     color: var(--white-30);
     text-decoration: none;
-    cursor: none;
+    
   }
   .footer-logo span { color: var(--purple-glow); }
   footer p {
@@ -614,9 +588,6 @@
 </head>
 <body>
 
-<!-- Custom Cursor -->
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursor-ring"></div>
 
 <!-- NAV -->
 <nav id="nav">
@@ -830,28 +801,6 @@
 </footer>
 
 <script>
-// ── Custom Cursor ──
-const cursor = document.getElementById('cursor');
-const ring = document.getElementById('cursor-ring');
-let mx = 0, my = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-function animCursor() {
-  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
-  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
-  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-  requestAnimationFrame(animCursor);
-}
-animCursor();
-document.querySelectorAll('a, button, .faq-item, .service-card, .step-item').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cursor.style.width = '20px'; cursor.style.height = '20px';
-    ring.style.width = '52px'; ring.style.height = '52px';
-  });
-  el.addEventListener('mouseleave', () => {
-    cursor.style.width = '12px'; cursor.style.height = '12px';
-    ring.style.width = '36px'; ring.style.height = '36px';
-  });
-});
 
 // ── Nav scroll ──
 const nav = document.getElementById('nav');
