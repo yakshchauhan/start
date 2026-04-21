@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NEXUS — Brand·Creator Agency</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #050508;
+    --purple-deep: #1a0a2e;
+    --purple-mid: #3d1a6e;
+    --purple-vivid: #7c3aed;
+    --purple-glow: #a855f7;
+    --pink-glow: #ec4899;
+    --blue-glow: #6366f1;
+    --white: #ffffff;
+    --white-60: rgba(255,255,255,0.6);
+    --white-30: rgba(255,255,255,0.3);
+    --white-10: rgba(255,255,255,0.1);
+    --white-05: rgba(255,255,255,0.05);
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── Custom Cursor ── */
+  .cursor {
+    position: fixed; top: 0; left: 0;
+    width: 12px; height: 12px;
+    background: var(--purple-glow);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.08s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    position: fixed; top: 0; left: 0;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(168,85,247,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s ease, width 0.25s ease, height 0.25s ease;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 56px;
+    transition: background 0.4s, backdrop-filter 0.4s, padding 0.3s;
+  }
+  nav.scrolled {
+    background: rgba(5,5,8,0.85);
+    backdrop-filter: blur(20px);
+    padding: 16px 56px;
+    border-bottom: 1px solid var(--white-10);
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--white);
+    text-decoration: none;
+    cursor: none;
+  }
+  .logo span { color: var(--purple-glow); }
+
+  .nav-links {
+    display: flex; align-items: center; gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    color: var(--white-60);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    cursor: none;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    text-decoration: none;
+    background: rgba(124,58,237,0.15);
+    border: 1px solid rgba(168,85,247,0.5);
+    padding: 10px 22px;
+    border-radius: 4px;
+    transition: background 0.25s, border-color 0.25s, box-shadow 0.25s;
+    cursor: none;
+    white-space: nowrap;
+  }
+  .nav-cta:hover {
+    background: rgba(168,85,247,0.25);
+    border-color: var(--purple-glow);
+    box-shadow: 0 0 24px rgba(168,85,247,0.25);
+  }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    height: 100vh; min-height: 700px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  /* Canvas for animated background */
+  #hero-canvas {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+  }
+
+  /* noise overlay */
+  #hero::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px;
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 860px;
+    padding: 0 24px;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--purple-glow);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(42px, 7vw, 88px);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.5s forwards;
+  }
+  .hero-title em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--purple-glow), var(--pink-glow), var(--blue-glow));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--white-60);
+    max-width: 540px;
+    margin: 0 auto 44px;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.7s forwards;
+  }
+
+  .hero-cta-wrap {
+    opacity: 0;
+    animation: fadeUp 0.9s 0.9s forwards;
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    color: var(--bg);
+    background: var(--white);
+    padding: 16px 36px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: none;
+    border: none;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(255,255,255,0.15);
+  }
+  .btn-primary svg { width: 16px; height: 16px; }
+
+  .hero-note {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--white-30);
+  }
+
+  /* ── SCROLL INDICATOR ── */
+  .scroll-indicator {
+    position: absolute; bottom: 36px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    opacity: 0;
+    animation: fadeIn 1s 1.5s forwards;
+  }
+  .scroll-indicator span {
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--white-30);
+  }
+  .scroll-line {
+    width: 1px; height: 48px;
+    background: linear-gradient(to bottom, var(--white-30), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+
+  /* ── SECTION BASE ── */
+  section { position: relative; overflow: hidden; }
+
+  .section-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* ── POSITIONING LINE ── */
+  #positioning {
+    padding: 80px 0;
+    border-bottom: 1px solid var(--white-10);
+  }
+  #positioning .section-inner {
+    display: flex; align-items: center; gap: 48px;
+  }
+  .pos-label {
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--purple-glow);
+    white-space: nowrap;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+  .pos-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--purple-glow), transparent);
+  }
+  .pos-text {
+    font-family: var(--font-display);
+    font-size: clamp(20px, 2.8vw, 32px);
+    font-weight: 600;
+    color: var(--white-60);
+    flex: 1;
+    line-height: 1.4;
+  }
+  .pos-text strong { color: var(--white); font-weight: 700; }
+
+  /* ── WHAT WE DO ── */
+  #what-we-do {
+    padding: 120px 0;
+    border-bottom: 1px solid var(--white-10);
+  }
+  .section-label {
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--purple-glow);
+    margin-bottom: 64px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: linear-gradient(to right, var(--white-10), transparent);
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .service-card {
+    position: relative;
+    padding: 48px 36px;
+    background: var(--white-05);
+    border: 1px solid var(--white-10);
+    overflow: hidden;
+    transition: background 0.35s, border-color 0.35s;
+    cursor: none;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 0%, rgba(168,85,247,0.12), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+  .service-card:hover { background: rgba(124,58,237,0.08); border-color: rgba(168,85,247,0.3); }
+  .service-card:hover::before { opacity: 1; }
+
+  .card-num {
+    font-family: var(--font-display);
+    font-size: 11px; letter-spacing: 0.15em;
+    color: var(--purple-glow);
+    margin-bottom: 32px;
+  }
+  .card-title {
+    font-family: var(--font-display);
+    font-size: 24px; font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  .card-desc {
+    font-size: 14px; font-weight: 300;
+    line-height: 1.7;
+    color: var(--white-60);
+  }
+  .card-arrow {
+    margin-top: 36px;
+    width: 32px; height: 32px;
+    border: 1px solid var(--white-10);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.25s, border-color 0.25s;
+  }
+  .service-card:hover .card-arrow {
+    transform: rotate(45deg);
+    border-color: var(--purple-glow);
+  }
+  .card-arrow svg { width: 14px; height: 14px; color: var(--white-60); }
+
+  /* ── PROCESS ── */
+  #process {
+    padding: 120px 0;
+    border-bottom: 1px solid var(--white-10);
+  }
+  .process-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 80px;
+  }
+  .process-title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 56px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    max-width: 400px;
+  }
+  .process-title em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--purple-glow), var(--pink-glow));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .process-intro {
+    font-size: 14px; font-weight: 300; line-height: 1.7;
+    color: var(--white-60);
+    max-width: 320px;
+  }
+
+  .steps-list {
+    list-style: none;
+    display: flex; flex-direction: column;
+  }
+  .step-item {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    align-items: start;
+    gap: 28px;
+    padding: 32px 0;
+    border-top: 1px solid var(--white-10);
+    cursor: none;
+    transition: padding-left 0.3s;
+  }
+  .step-item:hover { padding-left: 12px; }
+  .step-item:last-child { border-bottom: 1px solid var(--white-10); }
+
+  .step-num {
+    font-family: var(--font-display);
+    font-size: 13px; letter-spacing: 0.08em;
+    color: var(--white-30);
+    padding-top: 4px;
+  }
+  .step-body {}
+  .step-title {
+    font-family: var(--font-display);
+    font-size: 20px; font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0;
+    transition: color 0.2s;
+  }
+  .step-item:hover .step-title { color: var(--purple-glow); }
+
+  .step-detail {
+    font-size: 14px; font-weight: 300; line-height: 1.7;
+    color: var(--white-60);
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.4s ease, margin-top 0.3s ease, opacity 0.3s;
+    opacity: 0;
+    margin-top: 0;
+  }
+  .step-item.active .step-detail,
+  .step-item:hover .step-detail {
+    max-height: 80px; margin-top: 12px; opacity: 1;
+  }
+
+  .step-indicator {
+    width: 24px; height: 24px;
+    border: 1px solid var(--white-10);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 4px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .step-item:hover .step-indicator {
+    border-color: var(--purple-glow);
+    background: rgba(168,85,247,0.15);
+  }
+  .step-indicator span {
+    display: block; width: 6px; height: 6px;
+    background: var(--white-30);
+    border-radius: 50%;
+    transition: background 0.2s;
+  }
+  .step-item:hover .step-indicator span { background: var(--purple-glow); }
+
+  /* ── FAQ ── */
+  #faq {
+    padding: 120px 0;
+    border-bottom: 1px solid var(--white-10);
+  }
+  .faq-header {
+    margin-bottom: 72px;
+  }
+  .faq-eyebrow {
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--purple-glow);
+    margin-bottom: 8px;
+  }
+  .faq-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.5vw, 48px);
+    font-weight: 800; letter-spacing: -0.03em;
+    margin-bottom: 16px;
+  }
+  .faq-sub {
+    font-size: 15px; font-weight: 300;
+    color: var(--white-60);
+  }
+
+  .faq-list { list-style: none; }
+  .faq-item {
+    border-top: 1px solid var(--white-10);
+    cursor: none;
+  }
+  .faq-item:last-child { border-bottom: 1px solid var(--white-10); }
+
+  .faq-q {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 28px 0;
+    gap: 24px;
+    font-family: var(--font-display);
+    font-size: 17px; font-weight: 600;
+    letter-spacing: -0.01em;
+    transition: color 0.2s;
+    user-select: none;
+  }
+  .faq-item.open .faq-q { color: var(--purple-glow); }
+
+  .faq-icon {
+    width: 28px; height: 28px; flex-shrink: 0;
+    border: 1px solid var(--white-10);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.35s, border-color 0.2s, background 0.2s;
+  }
+  .faq-item.open .faq-icon {
+    transform: rotate(45deg);
+    border-color: var(--purple-glow);
+    background: rgba(168,85,247,0.15);
+  }
+  .faq-icon svg { width: 12px; height: 12px; }
+
+  .faq-a {
+    font-size: 14px; font-weight: 300; line-height: 1.8;
+    color: var(--white-60);
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.45s ease, padding-bottom 0.3s, opacity 0.35s;
+    opacity: 0;
+    padding-bottom: 0;
+  }
+  .faq-item.open .faq-a {
+    max-height: 160px; padding-bottom: 28px; opacity: 1;
+  }
+
+  /* ── FINAL CTA ── */
+  #final-cta {
+    padding: 160px 0;
+    text-align: center;
+  }
+  #final-cta .section-inner { position: relative; z-index: 1; }
+
+  .cta-glow {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(124,58,237,0.2), transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-line {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 48px;
+    line-height: 1.15;
+  }
+  .cta-line em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--purple-glow), var(--pink-glow));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 32px 56px;
+    border-top: 1px solid var(--white-10);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 16px; font-weight: 800;
+    color: var(--white-30);
+    text-decoration: none;
+    cursor: none;
+  }
+  .footer-logo span { color: var(--purple-glow); }
+  footer p {
+    font-size: 12px; color: var(--white-30);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+
+  /* Reveal on scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.75s ease, transform 0.75s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    nav.scrolled { padding: 14px 24px; }
+    .nav-links { display: none; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .process-header { flex-direction: column; align-items: flex-start; gap: 24px; }
+    #positioning .section-inner { flex-direction: column; gap: 24px; }
+    .pos-label { writing-mode: initial; transform: none; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo">NEX<span>US</span></a>
+  <ul class="nav-links">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#what-we-do">For Brands</a></li>
+    <li><a href="#process">For Creators</a></li>
+    <li><a href="#process">How It Works</a></li>
+    <li><a href="#faq">About</a></li>
+  </ul>
+  <a href="#final-cta" class="nav-cta">Apply to Work With Us ↗</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Brand · Creator Partnership Agency</p>
+    <h1 class="hero-title">
+      Where brands and<br/>creators build<br/><em>meaningful</em> partnerships.
+    </h1>
+    <p class="hero-sub">
+      We operate a curated network connecting high-intent brands with performance-driven creators.
+    </p>
+    <div class="hero-cta-wrap">
+      <a href="#final-cta" class="btn-primary">
+        Apply to Work With Us
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </a>
+      <span class="hero-note">For brands and creators</span>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- POSITIONING -->
+<section id="positioning">
+  <div class="section-inner">
+    <div class="pos-label">About</div>
+    <div class="pos-line"></div>
+    <p class="pos-text reveal">
+      We help brands collaborate with creators through <strong>structured, performance-driven partnerships.</strong>
+    </p>
+  </div>
+</section>
+
+<!-- WHAT WE DO -->
+<section id="what-we-do">
+  <div class="section-inner">
+    <div class="section-label reveal">What We Do</div>
+    <div class="cards-grid">
+      <div class="service-card reveal reveal-delay-1">
+        <div class="card-num">01 / 03</div>
+        <h3 class="card-title">Creator Matching</h3>
+        <p class="card-desc">We pair your brand with creators who genuinely align with your audience—not just by numbers, but by ethos, niche, and engagement quality.</p>
+        <div class="card-arrow">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+        </div>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <div class="card-num">02 / 03</div>
+        <h3 class="card-title">Campaign Structuring</h3>
+        <p class="card-desc">Every collaboration is built on a clear framework—objectives, deliverables, timelines, and success metrics defined before a single piece of content is made.</p>
+        <div class="card-arrow">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+        </div>
+      </div>
+      <div class="service-card reveal reveal-delay-3">
+        <div class="card-num">03 / 03</div>
+        <h3 class="card-title">Execution & Reporting</h3>
+        <p class="card-desc">We manage the full collaboration cycle and deliver transparent reporting—so you always know what's working, and why.</p>
+        <div class="card-arrow">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="section-inner">
+    <div class="process-header reveal">
+      <h2 class="process-title">The Partnership <em>Framework</em></h2>
+      <p class="process-intro">Five deliberate stages. Each one moves you closer to a collaboration that actually performs.</p>
+    </div>
+    <ul class="steps-list">
+      <li class="step-item reveal">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <div class="step-title">Discovery</div>
+          <div class="step-detail">Understanding your goals, audience, product, and what a meaningful outcome looks like for your brand or creative identity.</div>
+        </div>
+        <div class="step-indicator"><span></span></div>
+      </li>
+      <li class="step-item reveal">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <div class="step-title">Strategic Matching</div>
+          <div class="step-detail">Connecting you with the right creators—filtered by audience alignment, content quality, and campaign fit, not just follower count.</div>
+        </div>
+        <div class="step-indicator"><span></span></div>
+      </li>
+      <li class="step-item reveal">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <div class="step-title">Campaign Structuring</div>
+          <div class="step-detail">Planning collaborations with clear objectives, defined deliverables, and structured timelines that set both sides up for success.</div>
+        </div>
+        <div class="step-indicator"><span></span></div>
+      </li>
+      <li class="step-item reveal">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <div class="step-title">Execution & Management</div>
+          <div class="step-detail">Seamless coordination from briefing to final delivery—we handle the process so both parties can focus on what they do best.</div>
+        </div>
+        <div class="step-indicator"><span></span></div>
+      </li>
+      <li class="step-item reveal">
+        <div class="step-num">05</div>
+        <div class="step-body">
+          <div class="step-title">Optimization & Reporting</div>
+          <div class="step-detail">Improving results with real data. Every campaign closes with a clear analysis, and every insight informs the next collaboration.</div>
+        </div>
+        <div class="step-indicator"><span></span></div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-inner">
+    <div class="faq-header reveal">
+      <p class="faq-eyebrow">↗ What Brands Often Ask</p>
+      <h2 class="faq-title">Clarity before<br/>collaboration.</h2>
+      <p class="faq-sub">Answers to the questions we hear most.</p>
+    </div>
+    <ul class="faq-list">
+      <li class="faq-item reveal">
+        <div class="faq-q">
+          How does influencer marketing work?
+          <div class="faq-icon"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 1v10M1 6h10"/></svg></div>
+        </div>
+        <div class="faq-a">We connect brands with creators whose audience aligns with their goals, structure campaigns, and manage execution to ensure measurable outcomes.</div>
+      </li>
+      <li class="faq-item reveal">
+        <div class="faq-q">
+          Why is influencer marketing important?
+          <div class="faq-icon"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 1v10M1 6h10"/></svg></div>
+        </div>
+        <div class="faq-a">It allows brands to reach highly engaged audiences through trusted voices, leading to stronger engagement and better conversion potential.</div>
+      </li>
+      <li class="faq-item reveal">
+        <div class="faq-q">
+          How do you find the right creators?
+          <div class="faq-icon"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 1v10M1 6h10"/></svg></div>
+        </div>
+        <div class="faq-a">We focus on audience alignment, content style, and relevance—ensuring partnerships that perform, not just look good on paper.</div>
+      </li>
+      <li class="faq-item reveal">
+        <div class="faq-q">
+          What are the benefits for my brand?
+          <div class="faq-icon"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 1v10M1 6h10"/></svg></div>
+        </div>
+        <div class="faq-a">Better audience targeting, higher engagement, authentic promotion, and scalable campaign structures tailored to your goals.</div>
+      </li>
+      <li class="faq-item reveal">
+        <div class="faq-q">
+          How much does it cost?
+          <div class="faq-icon"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 1v10M1 6h10"/></svg></div>
+        </div>
+        <div class="faq-a">Costs vary based on creators, campaign scope, and deliverables. We help structure campaigns that align with your budget and objectives.</div>
+      </li>
+      <li class="faq-item reveal">
+        <div class="faq-q">
+          How is success measured?
+          <div class="faq-icon"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 1v10M1 6h10"/></svg></div>
+        </div>
+        <div class="faq-a">We evaluate campaigns based on metrics such as reach, engagement, and overall performance aligned with your goals.</div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="final-cta">
+  <div class="section-inner" style="position:relative;">
+    <div class="cta-glow"></div>
+    <p class="cta-line reveal">
+      Ready to build<br/><em>meaningful partnerships?</em>
+    </p>
+    <a href="#" class="btn-primary reveal">
+      Apply to Work With Us
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">NEX<span>US</span></a>
+  <p>© 2025 Nexus Agency. All rights reserved.</p>
+</footer>
+
+<script>
+// ── Custom Cursor ──
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animCursor() {
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+document.querySelectorAll('a, button, .faq-item, .service-card, .step-item').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '20px'; cursor.style.height = '20px';
+    ring.style.width = '52px'; ring.style.height = '52px';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '12px'; cursor.style.height = '12px';
+    ring.style.width = '36px'; ring.style.height = '36px';
+  });
+});
+
+// ── Nav scroll ──
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── Hero Canvas: fluid silk ribbons ──
+(function() {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, t = 0;
+
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // dark base gradient
+  function drawBase() {
+    const g = ctx.createRadialGradient(W*0.6, H*0.3, 0, W*0.5, H*0.5, W*0.9);
+    g.addColorStop(0, '#2a0a50');
+    g.addColorStop(0.3, '#1a0a2e');
+    g.addColorStop(0.7, '#0d0718');
+    g.addColorStop(1, '#050508');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  function ribbon(cfg) {
+    const { ox, oy, cx1, cy1, cx2, cy2, ex, ey, color, width, alpha } = cfg;
+    ctx.beginPath();
+    ctx.moveTo(ox, oy);
+    ctx.bezierCurveTo(cx1, cy1, cx2, cy2, ex, ey);
+    ctx.lineWidth = width;
+    ctx.strokeStyle = color;
+    ctx.globalAlpha = alpha;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    drawBase();
+
+    t += 0.004;
+
+    // ribbon set A — large purple arcs
+    const A = [
+      { base: { ox: W*0.55, oy: -H*0.1 } },
+      { base: { ox: W*0.6, oy: -H*0.05 } },
+      { base: { ox: W*0.65, oy: -H*0.08 } },
+    ];
+
+    const configs = [
+      { ox:W*(0.52+0.04*Math.sin(t*0.8)), oy:-H*0.05, cx1:W*0.7+40*Math.cos(t), cy1:H*0.25, cx2:W*0.45+30*Math.sin(t*1.2), cy2:H*0.65, ex:W*-0.05, ey:H*1.05, color:'rgba(120,40,220,0.7)', width:220+40*Math.sin(t), alpha:0.35 },
+      { ox:W*(0.58+0.03*Math.cos(t)), oy:-H*0.08, cx1:W*0.72+20*Math.sin(t*1.3), cy1:H*0.2, cx2:W*0.5+25*Math.cos(t), cy2:H*0.6, ex:W*0.05, ey:H*1.1, color:'rgba(168,85,247,0.6)', width:120+30*Math.cos(t*0.9), alpha:0.4 },
+      { ox:W*(0.61+0.05*Math.sin(t*1.1)), oy:-H*0.02, cx1:W*0.68+15*Math.cos(t*0.7), cy1:H*0.3, cx2:W*0.42+20*Math.sin(t), cy2:H*0.72, ex:W*(-0.02), ey:H*1.08, color:'rgba(236,72,153,0.5)', width:60+20*Math.sin(t*1.1), alpha:0.3 },
+      // thinner bright ribbon
+      { ox:W*(0.56+0.03*Math.cos(t*0.6)), oy:-H*0.03, cx1:W*0.74+10*Math.sin(t*1.5), cy1:H*0.22, cx2:W*0.48+12*Math.cos(t*1.1), cy2:H*0.68, ex:W*0.02, ey:H*1.05, color:'rgba(200,140,255,0.9)', width:8+4*Math.sin(t*2), alpha:0.55 },
+      { ox:W*(0.60+0.04*Math.sin(t*0.9)), oy:-H*0.06, cx1:W*0.76+8*Math.cos(t*1.2), cy1:H*0.28, cx2:W*0.44+10*Math.sin(t), cy2:H*0.70, ex:W*0.04, ey:H*1.06, color:'rgba(255,180,255,0.8)', width:4+2*Math.cos(t*1.8), alpha:0.45 },
+    ];
+
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    configs.forEach(c => ribbon(c));
+
+    // glow spots
+    const spots = [
+      { x: W*0.62+30*Math.sin(t), y: H*0.28+20*Math.cos(t*0.7), r: 180, c1:'rgba(124,58,237,0.22)', c2:'transparent' },
+      { x: W*0.5+20*Math.cos(t*0.8), y: H*0.6+15*Math.sin(t), r: 220, c1:'rgba(168,85,247,0.14)', c2:'transparent' },
+      { x: W*0.68+10*Math.sin(t*1.2), y: H*0.42+10*Math.cos(t*0.9), r: 120, c1:'rgba(236,72,153,0.18)', c2:'transparent' },
+    ];
+    spots.forEach(s => {
+      const grd = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r);
+      grd.addColorStop(0, s.c1); grd.addColorStop(1, s.c2);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = grd;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fill();
+    });
+
+    // dark vignette
+    const vig = ctx.createRadialGradient(W*0.5, H*0.5, H*0.2, W*0.5, H*0.5, H*0.85);
+    vig.addColorStop(0, 'transparent');
+    vig.addColorStop(1, 'rgba(5,5,8,0.7)');
+    ctx.fillStyle = vig; ctx.globalAlpha = 1;
+    ctx.fillRect(0, 0, W, H);
+
+    // dark left half overlay
+    const leftFade = ctx.createLinearGradient(0, 0, W*0.5, 0);
+    leftFade.addColorStop(0, 'rgba(5,5,8,0.92)');
+    leftFade.addColorStop(0.5, 'rgba(5,5,8,0.3)');
+    leftFade.addColorStop(1, 'transparent');
+    ctx.fillStyle = leftFade; ctx.fillRect(0, 0, W, H);
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── Scroll Reveal ──
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.12 });
+reveals.forEach(el => observer.observe(el));
+
+// ── FAQ Accordion ──
+document.querySelectorAll('.faq-item').forEach(item => {
+  item.querySelector('.faq-q').addEventListener('click', () => {
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  });
+});
+</script>
+</body>
+</html>
